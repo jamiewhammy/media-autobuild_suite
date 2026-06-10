@@ -71,12 +71,11 @@
 --enable-libsvtav1
 
 # Full
-# frei0r disabled 2026-06-10: upstream SSE4.1 code in tint0r.c passes a
-# __m128 to _mm_storeu_si128 (expects __m128i) and fails to compile with
-# the MSYS2 GCC 16 toolchain. Re-enable once fixed in dyne/frei0r.
+# frei0r's SSE4.1 code needs -flax-vector-conversions under GCC 16;
+# build/frei0r_extra.sh adds that flag for the frei0r build only.
 --enable-chromaprint
 --enable-decklink
-#--enable-frei0r
+--enable-frei0r
 --enable-libaribb24
 --enable-libbs2b
 --enable-libcaca
