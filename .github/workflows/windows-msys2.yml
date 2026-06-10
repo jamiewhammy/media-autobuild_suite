@@ -46,3 +46,19 @@ jobs:
         shell: cmd
         run: |
           call media-autobuild_suite.bat
+
+      # On failure the suite zips its diagnostics into build\logs.zip.
+      # Upload it (plus any loose suite logs, e.g. when the job timed out
+      # before the diagnostics step ran) so failures can be inspected from
+      # the run page. failure() || cancelled() also covers the job timeout.
+      - name: Upload build logs
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            build/logs.zip
+            build/*.log
+            build/*/ab-suite.*.log
