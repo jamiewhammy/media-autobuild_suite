@@ -1,21 +1,24 @@
 name: Windows MSYS2
 
+# GitHub Actions allows at most 10 workflow_dispatch inputs, so the most
+# commonly changed options are exposed directly and everything else can be
+# set through the free-form "overrides" input (e.g. "fdkaac=2 mpv=2 vlc=2").
 on:
   workflow_dispatch:
     inputs:
       arch:
-        description: 'Choose the target build system'
+        description: 'Target build system'
         required: false
-        default: '3'
+        default: '3 - 64-bit build system'
         type: choice
         options:
           - '1 - both (32-bit and 64-bit)'
           - '2 - 32-bit build system'
           - '3 - 64-bit build system'
       license2:
-        description: 'Choose the FFmpeg license preset'
+        description: 'FFmpeg license preset'
         required: false
-        default: '2'
+        default: '2 - GPLv3'
         type: choice
         options:
           - '1 - Non-free'
@@ -23,16 +26,30 @@ on:
           - '3 - GPLv2.1'
           - '4 - LGPLv3'
           - '5 - LGPLv2.1'
-      vpx2:
-        description: 'Enable VPX2 support'
+      ffmpegB2:
+        description: 'FFmpeg build type'
         required: false
-        default: 'Yes'
+        default: '1 - Static'
         type: choice
         options:
-          - 'Yes'
-          - 'No'
+          - '1 - Static'
+          - '2 - No'
+          - '3 - Shared'
+          - '4 - Both'
+          - '5 - Shared libs'
+          - '6 - Both static'
+      ffmpegChoice:
+        description: 'ffmpeg/mpv optional libraries preset'
+        required: false
+        default: '2 - No (Light build)'
+        type: choice
+        options:
+          - '1 - Yes (customize ffmpeg_options.txt)'
+          - '2 - No (Light build)'
+          - '3 - No (Mimic Zeranoe)'
+          - '4 - No (All available external libs)'
       x2643:
-        description: 'Choose x264 build type'
+        description: 'x264 build type'
         required: false
         default: '1 - Lib/binary with 8 and 10-bit'
         type: choice
@@ -45,7 +62,7 @@ on:
           - '6 - Same as 4 with video codecs only'
           - '7 - Lib/binary with only 8-bit'
       x2652:
-        description: 'Choose x265 build type'
+        description: 'x265 build type'
         required: false
         default: '1 - Lib/binary with Main, Main10 and Main12'
         type: choice
@@ -57,113 +74,10 @@ on:
           - '5 - Lib/binary with Main, shared libs with Main10 and Main12'
           - '6 - Same as 1 with XP support and non-XP compatible x265-numa.exe'
           - '7 - Lib/binary with Main12 only'
-      other265:
-        description: 'Enable other265 support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      flac:
-        description: 'Enable FLAC support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      fdkaac:
-        description: 'Enable FDK AAC support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      mediainfo:
-        description: 'Enable MediaInfo support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      soxB:
-        description: 'Enable SoX support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      ffmpegB2:
-        description: 'Choose FFmpeg build type'
-        required: false
-        default: '1 - Static'
-        type: choice
-        options:
-          - '1 - Static'
-          - '2 - No'
-          - '3 - Shared'
-          - '4 - Both'
-          - '5 - Shared libs'
-          - '6 - Both static'
-      ffmpegUpdate:
-        description: 'Choose FFmpeg update behavior'
-        required: false
-        default: '1 - Yes'
-        type: choice
-        options:
-          - '1 - Yes'
-          - '2 - No'
-          - '3 - Only build FFmpeg/mpv and missing dependencies'
-      ffmpegChoice:
-        description: 'Choose ffmpeg/mpv optional libraries preset'
-        required: false
-        default: '1 - Yes'
-        type: choice
-        options:
-          - '1 - Yes'
-          - '2 - No (Light build)'
-          - '3 - No (Mimic Zeranoe)'
-          - '4 - No (All available external libs)'
-      ffmpegKeepLegacyOpts:
-        description: 'Keep legacy FFmpeg options'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      mp4box:
-        description: 'Enable MP4Box support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      rtmpdump:
-        description: 'Enable RTMPDump support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      mplayer2:
-        description: 'Enable MPlayer support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
       mpv:
-        description: 'Enable MPV support'
+        description: 'Build mpv'
         required: false
-        default: 'Yes'
+        default: 'No'
         type: choice
         options:
           - 'Yes'
@@ -173,343 +87,15 @@ on:
         required: false
         default: '2'
         type: string
-      deleteSource:
-        description: 'Delete source directories after build'
-        required: false
-        default: 'No'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      strip:
-        description: 'Strip binaries'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      pack:
-        description: 'Create packed artifacts'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      logging:
-        description: 'Enable logging'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      bmx:
-        description: 'Enable BMX support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      standalone:
-        description: 'Build standalone helper binaries'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      updateSuite:
-        description: 'Check for suite updates'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      av1an:
-        description: 'Enable AV1AN support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      aom:
-        description: 'Enable AOM support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      faac:
-        description: 'Enable FAAC support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      exhale:
-        description: 'Enable Exhale support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      ffmbc:
-        description: 'Enable FFmbc support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      curl:
-        description: 'Choose curl backend'
-        required: false
-        default: '1 - Yes'
-        type: choice
-        options:
-          - '1 - Yes'
-          - '2 - No'
-          - '3 - schannel'
-          - '4 - gnutls'
-          - '5 - openssl'
-          - '6 - libressl'
-          - '7 - mbedtls'
-      cyanrip2:
-        description: 'Enable cyanrip2 support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      rav1e:
-        description: 'Enable Rav1e support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      ripgrep:
-        description: 'Enable ripgrep support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      dav1d:
-        description: 'Enable Dav1d support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      libavif:
-        description: 'Enable libavif support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      libheif:
-        description: 'Choose libheif build type'
-        required: false
-        default: '1 - Yes'
-        type: choice
-        options:
-          - '1 - Yes'
-          - '2 - No'
-          - '3 - Shared (single libheif.dll)'
-      vvc:
-        description: 'Enable VVC support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      uvg266:
-        description: 'Enable uvg266 support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      jq:
-        description: 'Enable jq support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      dssim:
-        description: 'Enable dssim support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      gifski:
-        description: 'Choose gifski build mode'
-        required: false
-        default: '1 - Yes'
-        type: choice
-        options:
-          - '1 - Yes'
-          - '2 - With built-in video support'
-          - '3 - No'
-      avs2:
-        description: 'Enable AVS2 support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      dovitool:
-        description: 'Enable dovitool support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      hdr10plustool:
-        description: 'Enable HDR10+ tool support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      timeStamp:
-        description: 'Enable timestamping'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      noMintty:
-        description: 'Disable Mintty'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      ccache:
-        description: 'Enable ccache'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      svthevc:
-        description: 'Enable SVT-HEVC support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      svtav1:
-        description: 'Enable SVT-AV1 support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      svtvp9:
-        description: 'Enable SVT-VP9 support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      xvc:
-        description: 'Enable xvc support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      jo:
-        description: 'Enable jo support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      vlc:
-        description: 'Enable VLC support'
-        required: false
-        default: 'Yes'
-        type: choice
-        options:
-          - 'Yes'
-          - 'No'
-      CC:
-        description: 'Compiler override'
-        required: false
-        default: ''
-        type: string
-      jpegxl:
-        description: 'Enable JPEG XL support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      vvenc:
-        description: 'Enable VVENC support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      vvdec:
-        description: 'Enable VVDEC support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      zlib:
-        description: 'Choose zlib variant'
-        required: false
-        default: '1 - Yes'
-        type: choice
-        options:
-          - '1 - Yes'
-          - '2 - chromium'
-          - '3 - cloudflare'
-          - '4 - ng'
-          - '5 - rs'
-          - '6 - No'
       ffmpegPath:
-        description: 'Optional FFmpeg path override'
+        description: 'FFmpeg source repository override (empty = official)'
         required: false
         default: ''
         type: string
-      pkgUpdateTime:
-        description: 'Package update time override'
+      overrides:
+        description: >-
+          Extra ini overrides as space-separated key=value pairs, e.g.
+          "fdkaac=2 flac=2 vlc=2 zlib=4". Yes/No are accepted as values.
         required: false
         default: ''
         type: string
@@ -546,6 +132,17 @@ jobs:
 
       - name: Prepare a non-interactive suite config
         shell: pwsh
+        env:
+          IN_ARCH: ${{ inputs.arch }}
+          IN_LICENSE2: ${{ inputs.license2 }}
+          IN_FFMPEGB2: ${{ inputs.ffmpegB2 }}
+          IN_FFMPEGCHOICE: ${{ inputs.ffmpegChoice }}
+          IN_X2643: ${{ inputs.x2643 }}
+          IN_X2652: ${{ inputs.x2652 }}
+          IN_MPV: ${{ inputs.mpv }}
+          IN_CORES: ${{ inputs.cores }}
+          IN_FFMPEGPATH: ${{ inputs.ffmpegPath }}
+          IN_OVERRIDES: ${{ inputs.overrides }}
         run: |
           function Get-ChoiceValue {
             param(
@@ -559,104 +156,131 @@ jobs:
 
             $normalized = $Raw.Trim()
 
-            if ($normalized -match '^(?i)yes$') {
+            if ($normalized -match '^(?i)yes') {
               return '1'
             }
 
-            if ($normalized -match '^(?i)no$') {
+            if ($normalized -match '^(?i)no') {
               return '2'
             }
 
-            if ($normalized -match '^\s*(\d+)') {
+            if ($normalized -match '^(\d+)') {
               return $Matches[1]
             }
 
             return $normalized
           }
 
-          $iniOptions = @(
-            'arch','license2','vpx2','x2643','x2652','other265','flac','fdkaac','mediainfo',
-            'soxB','ffmpegB2','ffmpegUpdate','ffmpegChoice','ffmpegKeepLegacyOpts','mp4box',
-            'rtmpdump','mplayer2','mpv','cores','deleteSource','strip','pack','logging','bmx',
-            'standalone','updateSuite','av1an','aom','faac','exhale','ffmbc','curl','cyanrip2',
-            'rav1e','ripgrep','dav1d','libavif','libheif','vvc','uvg266','jq','dssim',
-            'gifski','avs2','dovitool','hdr10plustool','timeStamp','noMintty','ccache',
-            'svthevc','svtav1','svtvp9','xvc','jo','vlc','CC','jpegxl','vvenc','vvdec',
-            'zlib','ffmpegPath','pkgUpdateTime'
-          )
+          # Every option the bat file reads from the ini, with a default that
+          # answers its interactive prompt. Any 0/missing/empty value would
+          # make the bat prompt (and hang the runner), so all must be set.
+          $options = [ordered]@{
+            arch                 = '3'
+            license2             = '2'
+            vpx2                 = '1'
+            x2643                = '1'
+            x2652                = '1'
+            other265             = '1'
+            flac                 = '1'
+            fdkaac               = '1'
+            mediainfo            = '1'
+            soxB                 = '1'
+            ffmpegB2             = '1'
+            ffmpegUpdate         = '1'
+            ffmpegChoice         = '2'
+            ffmpegKeepLegacyOpts = '1'
+            mp4box               = '1'
+            rtmpdump             = '1'
+            mplayer2             = '1'
+            mpv                  = '2'
+            cores                = '2'
+            deleteSource         = '2'
+            strip                = '1'
+            pack                 = '1'
+            logging              = '1'
+            bmx                  = '1'
+            standalone           = '1'
+            updateSuite          = '2'
+            av1an                = '1'
+            aom                  = '1'
+            faac                 = '1'
+            exhale               = '1'
+            ffmbc                = '1'
+            curl                 = '1'
+            cyanrip2             = '1'
+            rav1e                = '1'
+            ripgrep              = '1'
+            dav1d                = '1'
+            libavif              = '1'
+            libheif              = '1'
+            vvc                  = '1'
+            uvg266               = '1'
+            jq                   = '1'
+            dssim                = '1'
+            gifski               = '1'
+            avs2                 = '1'
+            dovitool             = '1'
+            hdr10plustool        = '1'
+            timeStamp            = '1'
+            noMintty             = '1'
+            ccache               = '1'
+            svthevc              = '1'
+            svtav1               = '1'
+            svtvp9               = '1'
+            xvc                  = '1'
+            jo                   = '1'
+            vlc                  = '1'
+            CC                   = '2'
+            jpegxl               = '1'
+            vvenc                = '1'
+            vvdec                = '1'
+            zlib                 = '1'
+            ffmpegPath           = 'https://git.ffmpeg.org/ffmpeg.git'
+            pkgUpdateTime        = '86400'
+          }
 
-          $optionOverrides = @{
-            arch = Get-ChoiceValue '${{ inputs.arch }}' '3'
-            license2 = Get-ChoiceValue '${{ inputs.license2 }}' '2'
-            vpx2 = Get-ChoiceValue '${{ inputs.vpx2 }}' '1'
-            x2643 = Get-ChoiceValue '${{ inputs.x2643 }}' '1'
-            x2652 = Get-ChoiceValue '${{ inputs.x2652 }}' '1'
-            other265 = Get-ChoiceValue '${{ inputs.other265 }}' '1'
-            flac = Get-ChoiceValue '${{ inputs.flac }}' '1'
-            fdkaac = Get-ChoiceValue '${{ inputs.fdkaac }}' '1'
-            mediainfo = Get-ChoiceValue '${{ inputs.mediainfo }}' '1'
-            soxB = Get-ChoiceValue '${{ inputs.soxB }}' '1'
-            ffmpegB2 = Get-ChoiceValue '${{ inputs.ffmpegB2 }}' '1'
-            ffmpegUpdate = Get-ChoiceValue '${{ inputs.ffmpegUpdate }}' '1'
-            ffmpegChoice = Get-ChoiceValue '${{ inputs.ffmpegChoice }}' '2'
-            ffmpegKeepLegacyOpts = Get-ChoiceValue '${{ inputs.ffmpegKeepLegacyOpts }}' '1'
-            mp4box = Get-ChoiceValue '${{ inputs.mp4box }}' '1'
-            rtmpdump = Get-ChoiceValue '${{ inputs.rtmpdump }}' '1'
-            mplayer2 = Get-ChoiceValue '${{ inputs.mplayer2 }}' '1'
-            mpv = Get-ChoiceValue '${{ inputs.mpv }}' '1'
-            cores = '${{ inputs.cores }}'
-            deleteSource = Get-ChoiceValue '${{ inputs.deleteSource }}' '2'
-            strip = Get-ChoiceValue '${{ inputs.strip }}' '1'
-            pack = Get-ChoiceValue '${{ inputs.pack }}' '1'
-            logging = Get-ChoiceValue '${{ inputs.logging }}' '1'
-            bmx = Get-ChoiceValue '${{ inputs.bmx }}' '1'
-            standalone = Get-ChoiceValue '${{ inputs.standalone }}' '1'
-            updateSuite = Get-ChoiceValue '${{ inputs.updateSuite }}' '1'
-            av1an = Get-ChoiceValue '${{ inputs.av1an }}' '1'
-            aom = Get-ChoiceValue '${{ inputs.aom }}' '1'
-            faac = Get-ChoiceValue '${{ inputs.faac }}' '1'
-            exhale = Get-ChoiceValue '${{ inputs.exhale }}' '1'
-            ffmbc = Get-ChoiceValue '${{ inputs.ffmbc }}' '1'
-            curl = Get-ChoiceValue '${{ inputs.curl }}' '1'
-            cyanrip2 = Get-ChoiceValue '${{ inputs.cyanrip2 }}' '1'
-            rav1e = Get-ChoiceValue '${{ inputs.rav1e }}' '1'
-            ripgrep = Get-ChoiceValue '${{ inputs.ripgrep }}' '1'
-            dav1d = Get-ChoiceValue '${{ inputs.dav1d }}' '1'
-            libavif = Get-ChoiceValue '${{ inputs.libavif }}' '1'
-            libheif = Get-ChoiceValue '${{ inputs.libheif }}' '1'
-            vvc = Get-ChoiceValue '${{ inputs.vvc }}' '1'
-            uvg266 = Get-ChoiceValue '${{ inputs.uvg266 }}' '1'
-            jq = Get-ChoiceValue '${{ inputs.jq }}' '1'
-            dssim = Get-ChoiceValue '${{ inputs.dssim }}' '1'
-            gifski = Get-ChoiceValue '${{ inputs.gifski }}' '1'
-            avs2 = Get-ChoiceValue '${{ inputs.avs2 }}' '1'
-            dovitool = Get-ChoiceValue '${{ inputs.dovitool }}' '1'
-            hdr10plustool = Get-ChoiceValue '${{ inputs.hdr10plustool }}' '1'
-            timeStamp = Get-ChoiceValue '${{ inputs.timeStamp }}' '1'
-            noMintty = Get-ChoiceValue '${{ inputs.noMintty }}' '1'
-            ccache = Get-ChoiceValue '${{ inputs.ccache }}' '1'
-            svthevc = Get-ChoiceValue '${{ inputs.svthevc }}' '1'
-            svtav1 = Get-ChoiceValue '${{ inputs.svtav1 }}' '1'
-            svtvp9 = Get-ChoiceValue '${{ inputs.svtvp9 }}' '1'
-            xvc = Get-ChoiceValue '${{ inputs.xvc }}' '1'
-            jo = Get-ChoiceValue '${{ inputs.jo }}' '1'
-            vlc = Get-ChoiceValue '${{ inputs.vlc }}' '1'
-            CC = '${{ inputs.CC }}'
-            jpegxl = Get-ChoiceValue '${{ inputs.jpegxl }}' '1'
-            vvenc = Get-ChoiceValue '${{ inputs.vvenc }}' '1'
-            vvdec = Get-ChoiceValue '${{ inputs.vvdec }}' '1'
-            zlib = Get-ChoiceValue '${{ inputs.zlib }}' '1'
-            ffmpegPath = '${{ inputs.ffmpegPath }}'
-            pkgUpdateTime = '${{ inputs.pkgUpdateTime }}'
+          # Apply the dedicated workflow_dispatch inputs (empty on push/PR).
+          $options['arch']         = Get-ChoiceValue $env:IN_ARCH $options['arch']
+          $options['license2']     = Get-ChoiceValue $env:IN_LICENSE2 $options['license2']
+          $options['ffmpegB2']     = Get-ChoiceValue $env:IN_FFMPEGB2 $options['ffmpegB2']
+          $options['ffmpegChoice'] = Get-ChoiceValue $env:IN_FFMPEGCHOICE $options['ffmpegChoice']
+          $options['x2643']        = Get-ChoiceValue $env:IN_X2643 $options['x2643']
+          $options['x2652']        = Get-ChoiceValue $env:IN_X2652 $options['x2652']
+          $options['mpv']          = Get-ChoiceValue $env:IN_MPV $options['mpv']
+
+          if (-not [string]::IsNullOrWhiteSpace($env:IN_CORES)) {
+            $options['cores'] = $env:IN_CORES.Trim()
+          }
+          if (-not [string]::IsNullOrWhiteSpace($env:IN_FFMPEGPATH)) {
+            $options['ffmpegPath'] = $env:IN_FFMPEGPATH.Trim()
+          }
+
+          # Apply free-form overrides for everything else.
+          if (-not [string]::IsNullOrWhiteSpace($env:IN_OVERRIDES)) {
+            foreach ($pair in ($env:IN_OVERRIDES -split '[\s,;]+')) {
+              if ([string]::IsNullOrWhiteSpace($pair)) { continue }
+              if ($pair -match '^([A-Za-z0-9]+)=(.+)$') {
+                $key = $Matches[1]
+                $value = $Matches[2]
+                if ($options.Contains($key)) {
+                  $options[$key] = Get-ChoiceValue $value $options[$key]
+                } else {
+                  Write-Warning "Ignoring unknown option '$key'"
+                }
+              } else {
+                Write-Warning "Ignoring malformed override '$pair' (expected key=value)"
+              }
+            }
           }
 
           $lines = @('[compiler list]')
-          foreach ($option in $iniOptions) {
-            $value = if ($optionOverrides.ContainsKey($option)) { $optionOverrides[$option] } else { '1' }
-            $lines += "$option=$value"
+          foreach ($option in $options.Keys) {
+            $lines += "$option=$($options[$option])"
           }
 
-          Set-Content -Path "$env:GITHUB_WORKSPACE\build\media-autobuild_suite.ini" -Value $lines -Encoding UTF8
+          New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\build" | Out-Null
+          Set-Content -Path "$env:GITHUB_WORKSPACE\build\media-autobuild_suite.ini" -Value $lines -Encoding utf8NoBOM
+          Get-Content "$env:GITHUB_WORKSPACE\build\media-autobuild_suite.ini"
 
       - name: Run media-autobuild_suite.bat
         shell: cmd
