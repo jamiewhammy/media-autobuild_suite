@@ -44,3 +44,6 @@ $RECYCLE.BIN/
 
 # Ignore extra files
 *_extra.sh
+
+# Allow the committed frei0r build hook (must come after *_extra.sh)
+!build/frei0r_extra.sh
