@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       arch:
-        description: 'Build target system (1=both, 2=32-bit, 3=64-bit)'
+        description: 'Build target system: 1=both (32+64-bit), 2=32-bit only, 3=64-bit only'
         required: false
         default: '3'
         type: choice
         options: ['1', '2', '3']
       license2:
-        description: 'FFmpeg license preset (1=non-free, 2=GPLv3, 3=GPLv2.1, 4=LGPLv3, 5=LGPLv2.1)'
+        description: 'FFmpeg license preset: 1=non-free, 2=GPLv3, 3=GPLv2.1, 4=LGPLv3, 5=LGPLv2.1'
         required: false
         default: '2'
         type: choice
@@ -117,7 +117,7 @@ on:
         default: '2'
         type: string
       deleteSource:
-        description: 'Delete source directories after build'
+        description: 'Delete source directories after build: 1=Yes, 2=No'
         required: false
         default: '0'
         type: choice
@@ -129,13 +129,13 @@ on:
         type: choice
         options: ['0', '1']
       pack:
-        description: 'Create packed artifacts'
+        description: 'Create packed artifacts: 1=Yes, 2=No'
         required: false
         default: '1'
         type: choice
         options: ['0', '1']
       logging:
-        description: 'Enable logging'
+        description: 'Enable logging: 1=Yes, 2=No'
         required: false
         default: '1'
         type: choice
@@ -147,13 +147,13 @@ on:
         type: choice
         options: ['0', '1']
       standalone:
-        description: 'Build standalone helper binaries'
+        description: 'Build standalone helper binaries: 1=Yes, 2=No'
         required: false
         default: '1'
         type: choice
         options: ['0', '1']
       updateSuite:
-        description: 'Check for suite updates'
+        description: 'Check for suite updates: 1=Yes, 2=No'
         required: false
         default: '1'
         type: choice
