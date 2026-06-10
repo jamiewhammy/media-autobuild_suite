@@ -60,6 +60,11 @@ jobs:
         env:
           # Keep the cache well under GitHub's 10 GB per-repo limit
           CCACHE_MAXSIZE: 3G
+          # ccache's default compiler check is mtime+size, which goes cold
+          # whenever msys64 is freshly installed or pacman updates gcc
+          # (new timestamps = "different compiler" = all misses). Hash the
+          # compiler binary instead so restored caches stay valid.
+          CCACHE_COMPILERCHECK: content
         run: |
           call media-autobuild_suite.bat
 
