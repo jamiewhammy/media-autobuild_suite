@@ -15,6 +15,13 @@ on:
       - master
   pull_request:
 
+# One build per branch/PR: a newer push cancels the superseded in-progress
+# run. The if: always() cache-save steps still get a chance to run on
+# cancellation, so banked ccache/msys64 progress is not lost.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   media-suite:
     runs-on: windows-latest
@@ -67,6 +74,16 @@ jobs:
           CCACHE_COMPILERCHECK: content
         run: |
           call media-autobuild_suite.bat
+
+      # Show cache effectiveness in the job log (hits/misses per run).
+      - name: ccache statistics
+        if: always()
+        shell: pwsh
+        env:
+          CCACHE_DIR: ${{ github.workspace }}\build\cache
+        run: |
+          $ccache = "msys64\ucrt64\bin\ccache.exe"
+          if (Test-Path $ccache) { & $ccache -sv } else { Write-Host "ccache not present (msys64 was not installed)" }
 
       - name: Save msys64
         if: always()
