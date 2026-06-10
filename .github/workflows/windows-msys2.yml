@@ -42,10 +42,36 @@ jobs:
         shell: pwsh
         run: Get-Content "$env:GITHUB_WORKSPACE\build\media-autobuild_suite.ini"
 
+      # The suite's compilers run through ccache (ccache=1 in the ini) with
+      # the cache at ${LOCALBUILDDIR}/cache, i.e. build\cache. Restore the
+      # newest previous cache before building and save a fresh snapshot
+      # afterwards. restore/save are split because the combined actions/cache
+      # only saves on job success, while failed or timed-out builds are
+      # exactly the ones that need to bank their compile progress.
+      - name: Restore ccache
+        uses: actions/cache/restore@v4
+        with:
+          path: build/cache
+          key: ccache-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            ccache-${{ github.ref_name }}-
+            ccache-master-
+            ccache-
+
       - name: Run media-autobuild_suite.bat
         shell: cmd
+        env:
+          # Keep the cache well under GitHub's 10 GB per-repo limit
+          CCACHE_MAXSIZE: 3G
         run: |
           call media-autobuild_suite.bat
+
+      - name: Save ccache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: build/cache
+          key: ccache-${{ github.ref_name }}-${{ github.run_id }}
 
       # On failure the suite zips its diagnostics into build\logs.zip.
       # Upload it (plus any loose suite logs, e.g. when the job timed out
