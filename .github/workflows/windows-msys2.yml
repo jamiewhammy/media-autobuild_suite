@@ -3,12 +3,24 @@ name: Windows MSYS2
 # All build options come from the committed build/media-autobuild_suite.ini,
 # which answers every prompt of media-autobuild_suite.bat so the run is
 # fully non-interactive. Edit that file to change what gets built.
+#
+# No MSYS2 setup step is needed: media-autobuild_suite.bat downloads and
+# installs its own MSYS2 environment into .\msys64 (and installs every
+# package it needs through pacman). That msys64 folder is cached between
+# runs below so later builds skip the download/bootstrap entirely.
 on:
   workflow_dispatch:
   push:
     branches:
       - master
   pull_request:
+
+# One build per branch/PR: a newer push cancels the superseded in-progress
+# run. The if: always() cache-save steps still get a chance to run on
+# cancellation, so banked ccache/msys64 progress is not lost.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   media-suite:
@@ -19,28 +31,20 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install MSYS2 on the Windows runner
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          msystem: UCRT64
-          install: >-
-            base-devel
-            git
-            make
-            patch
-            unzip
-            p7zip
-            wget
-            mingw-w64-ucrt-x86_64-gcc
-            mingw-w64-ucrt-x86_64-cmake
-            mingw-w64-ucrt-x86_64-ninja
-            mingw-w64-ucrt-x86_64-nasm
-            mingw-w64-ucrt-x86_64-pkg-config
-
       - name: Show the suite config
         shell: pwsh
         run: Get-Content "$env:GITHUB_WORKSPACE\build\media-autobuild_suite.ini"
+
+      # The bat skips its MSYS2 bootstrap when .\msys64 already exists
+      # (it checks for msys64\msys2_shell.cmd), so restoring a cached
+      # install saves the download, extraction and pacman package setup.
+      - name: Restore msys64
+        uses: actions/cache/restore@v4
+        with:
+          path: msys64
+          key: msys64-${{ github.run_id }}
+          restore-keys: |
+            msys64-
 
       # The suite's compilers run through ccache (ccache=1 in the ini) with
       # the cache at ${LOCALBUILDDIR}/cache, i.e. build\cache. Restore the
@@ -63,8 +67,30 @@ jobs:
         env:
           # Keep the cache well under GitHub's 10 GB per-repo limit
           CCACHE_MAXSIZE: 3G
+          # ccache's default compiler check is mtime+size, which goes cold
+          # whenever msys64 is freshly installed or pacman updates gcc
+          # (new timestamps = "different compiler" = all misses). Hash the
+          # compiler binary instead so restored caches stay valid.
+          CCACHE_COMPILERCHECK: content
         run: |
           call media-autobuild_suite.bat
+
+      # Show cache effectiveness in the job log (hits/misses per run).
+      - name: ccache statistics
+        if: always()
+        shell: pwsh
+        env:
+          CCACHE_DIR: ${{ github.workspace }}\build\cache
+        run: |
+          $ccache = "msys64\ucrt64\bin\ccache.exe"
+          if (Test-Path $ccache) { & $ccache -sv } else { Write-Host "ccache not present (msys64 was not installed)" }
+
+      - name: Save msys64
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: msys64
+          key: msys64-${{ github.run_id }}
 
       - name: Save ccache
         if: always()
@@ -72,6 +98,19 @@ jobs:
         with:
           path: build/cache
           key: ccache-${{ github.ref_name }}-${{ github.run_id }}
+
+      # The suite installs everything it compiles into .\local64 (binaries
+      # in bin-video/bin-audio/bin-global, plus libs and headers). Attach
+      # it to the run; on failed or timed-out runs this still captures
+      # whatever had been built so far.
+      - name: Upload compiled output (local64)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: local64-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: local64
 
       # On failure the suite zips its diagnostics into build\logs.zip.
       # Upload it (plus any loose suite logs, e.g. when the job timed out
