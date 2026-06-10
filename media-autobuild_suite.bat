@@ -2098,7 +2098,7 @@ goto :EOF
     echo.PKG_CONFIG_PATH="${LOCALDESTDIR}/lib/pkgconfig:${MINGW_PREFIX}/lib/pkgconfig"
     echo.
     echo.CFLAGS="-D_FORTIFY_SOURCE=2 -fstack-protector-strong" # security related flags
-    echo.CFLAGS+=" -mtune=generic -O2 -pipe" # performance related flags
+    echo.CFLAGS+=" -mtune=haswell -march=haswell -O2 -pipe" # performance related flags
     echo.CFLAGS+=" -D__USE_MINGW_ANSI_STDIO=1" # mingw-w64 specific flags for c99 printf
     echo.CXXFLAGS="${CFLAGS}" # copy CFLAGS to CXXFLAGS
     echo.LDFLAGS="${CFLAGS} -static-libgcc" # copy CFLAGS to LDFLAGS
@@ -2106,13 +2106,13 @@ goto :EOF
     echo.*clang^)
     echo.    # clang complains about using static-libstdc++ with C files.
     echo.    LDFLAGS+=" --start-no-unused-arguments -static-libstdc++ --end-no-unused-arguments"
-    echo.    CFLAGS+=" --start-no-unused-arguments -mthreads --end-no-unused-arguments" # mingw-w64 specific flags for windows threads.
+    echo.    CFLAGS+=" --start-no-unused-arguments -mthreads --end-no-unused-arguments -march=haswell" # mingw-w64 specific flags for windows threads.
     echo.    CFLAGS+=" -Qunused-arguments" # clang 17.0.1 complains about -mwindows being present during compilation
     echo.;;
     echo.*gcc^)
     echo.    # while gcc doesn't.
     echo.    LDFLAGS+=" -static-libstdc++"
-    echo.    CFLAGS+=" -mthreads" # mingw-w64 specific flags for windows threads.
+    echo.    CFLAGS+=" -mthreads -march=haswell" # mingw-w64 specific flags for windows threads.
     echo.;;
     echo.esac
     echo.# CPPFLAGS used to be here, but cmake ignores it, so it's not as useful.

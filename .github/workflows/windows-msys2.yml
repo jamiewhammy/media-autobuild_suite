@@ -1,0 +1,495 @@
+name: Windows MSYS2
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: 'Build target system (1=both, 2=32-bit, 3=64-bit)'
+        required: false
+        default: '3'
+        type: choice
+        options: ['1', '2', '3']
+      license2:
+        description: 'FFmpeg license preset (1=non-free, 2=GPLv3, 3=GPLv2.1, 4=LGPLv3, 5=LGPLv2.1)'
+        required: false
+        default: '2'
+        type: choice
+        options: ['1', '2', '3', '4', '5']
+      vpx2:
+        description: 'Enable VPX2 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      x2643:
+        description: 'Enable x2643 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      x2652:
+        description: 'Enable x2652 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      other265:
+        description: 'Enable other265 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      flac:
+        description: 'Enable FLAC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      fdkaac:
+        description: 'Enable FDK AAC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      mediainfo:
+        description: 'Enable MediaInfo support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      soxB:
+        description: 'Enable SoX support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      ffmpegB2:
+        description: 'Enable FFmpeg B2 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      ffmpegUpdate:
+        description: 'Update FFmpeg sources'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      ffmpegChoice:
+        description: 'FFmpeg build preset'
+        required: false
+        default: '2'
+        type: choice
+        options: ['1', '2', '3', '4']
+      ffmpegKeepLegacyOpts:
+        description: 'Keep legacy FFmpeg options'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      mp4box:
+        description: 'Enable MP4Box support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      rtmpdump:
+        description: 'Enable RTMPDump support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      mplayer2:
+        description: 'Enable MPlayer support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      mpv:
+        description: 'Enable MPV support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      cores:
+        description: 'Number of build cores'
+        required: false
+        default: '2'
+        type: string
+      deleteSource:
+        description: 'Delete source directories after build'
+        required: false
+        default: '0'
+        type: choice
+        options: ['0', '1']
+      strip:
+        description: 'Strip binaries'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      pack:
+        description: 'Create packed artifacts'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      logging:
+        description: 'Enable logging'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      bmx:
+        description: 'Enable BMX support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      standalone:
+        description: 'Build standalone helper binaries'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      updateSuite:
+        description: 'Check for suite updates'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      av1an:
+        description: 'Enable AV1AN support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      aom:
+        description: 'Enable AOM support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      faac:
+        description: 'Enable FAAC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      exhale:
+        description: 'Enable Exhale support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      ffmbc:
+        description: 'Enable FFmbc support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      curl:
+        description: 'Enable curl support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      cyanrip2:
+        description: 'Enable cyanrip2 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      rav1e:
+        description: 'Enable Rav1e support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      ripgrep:
+        description: 'Enable ripgrep support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      dav1d:
+        description: 'Enable Dav1d support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      libavif:
+        description: 'Enable libavif support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      libheif:
+        description: 'Enable libheif support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      vvc:
+        description: 'Enable VVC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      uvg266:
+        description: 'Enable uvg266 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      jq:
+        description: 'Enable jq support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      dssim:
+        description: 'Enable dssim support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      gifski:
+        description: 'Enable gifski support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      avs2:
+        description: 'Enable AVS2 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      dovitool:
+        description: 'Enable dovitool support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      hdr10plustool:
+        description: 'Enable HDR10+ tool support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      timeStamp:
+        description: 'Enable timestamping'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      noMintty:
+        description: 'Disable Mintty'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      ccache:
+        description: 'Enable ccache'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      svthevc:
+        description: 'Enable SVT-HEVC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      svtav1:
+        description: 'Enable SVT-AV1 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      svtvp9:
+        description: 'Enable SVT-VP9 support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      xvc:
+        description: 'Enable xvc support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      jo:
+        description: 'Enable jo support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      vlc:
+        description: 'Enable VLC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      CC:
+        description: 'Compiler override'
+        required: false
+        default: ''
+        type: string
+      jpegxl:
+        description: 'Enable JPEG XL support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      vvenc:
+        description: 'Enable VVENC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      vvdec:
+        description: 'Enable VVDEC support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      zlib:
+        description: 'Enable zlib support'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
+      ffmpegPath:
+        description: 'Optional FFmpeg path override'
+        required: false
+        default: ''
+        type: string
+      pkgUpdateTime:
+        description: 'Package update time override'
+        required: false
+        default: ''
+        type: string
+  push:
+  pull_request:
+
+jobs:
+  media-suite:
+    runs-on: windows-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install MSYS2 on the Windows runner
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: UCRT64
+          install: >-
+            base-devel
+            git
+            make
+            patch
+            unzip
+            p7zip
+            wget
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-nasm
+            mingw-w64-ucrt-x86_64-pkg-config
+
+      - name: Prepare a non-interactive suite config
+        shell: pwsh
+        run: |
+          $iniOptions = @(
+            'arch','license2','vpx2','x2643','x2652','other265','flac','fdkaac','mediainfo',
+            'soxB','ffmpegB2','ffmpegUpdate','ffmpegChoice','ffmpegKeepLegacyOpts','mp4box',
+            'rtmpdump','mplayer2','mpv','cores','deleteSource','strip','pack','logging','bmx',
+            'standalone','updateSuite','av1an','aom','faac','exhale','ffmbc','curl','cyanrip2',
+            'rav1e','ripgrep','dav1d','libavif','libheif','vvc','uvg266','jq','dssim',
+            'gifski','avs2','dovitool','hdr10plustool','timeStamp','noMintty','ccache',
+            'svthevc','svtav1','svtvp9','xvc','jo','vlc','CC','jpegxl','vvenc','vvdec',
+            'zlib','ffmpegPath','pkgUpdateTime'
+          )
+
+          $optionOverrides = @{
+            arch = if ([string]::IsNullOrWhiteSpace('${{ inputs.arch }}')) { '3' } else { '${{ inputs.arch }}' }
+            license2 = if ([string]::IsNullOrWhiteSpace('${{ inputs.license2 }}')) { '2' } else { '${{ inputs.license2 }}' }
+            vpx2 = if ([string]::IsNullOrWhiteSpace('${{ inputs.vpx2 }}')) { '1' } else { '${{ inputs.vpx2 }}' }
+            x2643 = if ([string]::IsNullOrWhiteSpace('${{ inputs.x2643 }}')) { '1' } else { '${{ inputs.x2643 }}' }
+            x2652 = if ([string]::IsNullOrWhiteSpace('${{ inputs.x2652 }}')) { '1' } else { '${{ inputs.x2652 }}' }
+            other265 = if ([string]::IsNullOrWhiteSpace('${{ inputs.other265 }}')) { '1' } else { '${{ inputs.other265 }}' }
+            flac = if ([string]::IsNullOrWhiteSpace('${{ inputs.flac }}')) { '1' } else { '${{ inputs.flac }}' }
+            fdkaac = if ([string]::IsNullOrWhiteSpace('${{ inputs.fdkaac }}')) { '1' } else { '${{ inputs.fdkaac }}' }
+            mediainfo = if ([string]::IsNullOrWhiteSpace('${{ inputs.mediainfo }}')) { '1' } else { '${{ inputs.mediainfo }}' }
+            soxB = if ([string]::IsNullOrWhiteSpace('${{ inputs.soxB }}')) { '1' } else { '${{ inputs.soxB }}' }
+            ffmpegB2 = if ([string]::IsNullOrWhiteSpace('${{ inputs.ffmpegB2 }}')) { '1' } else { '${{ inputs.ffmpegB2 }}' }
+            ffmpegUpdate = if ([string]::IsNullOrWhiteSpace('${{ inputs.ffmpegUpdate }}')) { '1' } else { '${{ inputs.ffmpegUpdate }}' }
+            ffmpegChoice = if ([string]::IsNullOrWhiteSpace('${{ inputs.ffmpegChoice }}')) { '2' } else { '${{ inputs.ffmpegChoice }}' }
+            ffmpegKeepLegacyOpts = if ([string]::IsNullOrWhiteSpace('${{ inputs.ffmpegKeepLegacyOpts }}')) { '1' } else { '${{ inputs.ffmpegKeepLegacyOpts }}' }
+            mp4box = if ([string]::IsNullOrWhiteSpace('${{ inputs.mp4box }}')) { '1' } else { '${{ inputs.mp4box }}' }
+            rtmpdump = if ([string]::IsNullOrWhiteSpace('${{ inputs.rtmpdump }}')) { '1' } else { '${{ inputs.rtmpdump }}' }
+            mplayer2 = if ([string]::IsNullOrWhiteSpace('${{ inputs.mplayer2 }}')) { '1' } else { '${{ inputs.mplayer2 }}' }
+            mpv = if ([string]::IsNullOrWhiteSpace('${{ inputs.mpv }}')) { '1' } else { '${{ inputs.mpv }}' }
+            cores = if ([string]::IsNullOrWhiteSpace('${{ inputs.cores }}')) { '2' } else { '${{ inputs.cores }}' }
+            deleteSource = if ([string]::IsNullOrWhiteSpace('${{ inputs.deleteSource }}')) { '0' } else { '${{ inputs.deleteSource }}' }
+            strip = if ([string]::IsNullOrWhiteSpace('${{ inputs.strip }}')) { '1' } else { '${{ inputs.strip }}' }
+            pack = if ([string]::IsNullOrWhiteSpace('${{ inputs.pack }}')) { '1' } else { '${{ inputs.pack }}' }
+            logging = if ([string]::IsNullOrWhiteSpace('${{ inputs.logging }}')) { '1' } else { '${{ inputs.logging }}' }
+            bmx = if ([string]::IsNullOrWhiteSpace('${{ inputs.bmx }}')) { '1' } else { '${{ inputs.bmx }}' }
+            standalone = if ([string]::IsNullOrWhiteSpace('${{ inputs.standalone }}')) { '1' } else { '${{ inputs.standalone }}' }
+            updateSuite = if ([string]::IsNullOrWhiteSpace('${{ inputs.updateSuite }}')) { '1' } else { '${{ inputs.updateSuite }}' }
+            av1an = if ([string]::IsNullOrWhiteSpace('${{ inputs.av1an }}')) { '1' } else { '${{ inputs.av1an }}' }
+            aom = if ([string]::IsNullOrWhiteSpace('${{ inputs.aom }}')) { '1' } else { '${{ inputs.aom }}' }
+            faac = if ([string]::IsNullOrWhiteSpace('${{ inputs.faac }}')) { '1' } else { '${{ inputs.faac }}' }
+            exhale = if ([string]::IsNullOrWhiteSpace('${{ inputs.exhale }}')) { '1' } else { '${{ inputs.exhale }}' }
+            ffmbc = if ([string]::IsNullOrWhiteSpace('${{ inputs.ffmbc }}')) { '1' } else { '${{ inputs.ffmbc }}' }
+            curl = if ([string]::IsNullOrWhiteSpace('${{ inputs.curl }}')) { '1' } else { '${{ inputs.curl }}' }
+            cyanrip2 = if ([string]::IsNullOrWhiteSpace('${{ inputs.cyanrip2 }}')) { '1' } else { '${{ inputs.cyanrip2 }}' }
+            rav1e = if ([string]::IsNullOrWhiteSpace('${{ inputs.rav1e }}')) { '1' } else { '${{ inputs.rav1e }}' }
+            ripgrep = if ([string]::IsNullOrWhiteSpace('${{ inputs.ripgrep }}')) { '1' } else { '${{ inputs.ripgrep }}' }
+            dav1d = if ([string]::IsNullOrWhiteSpace('${{ inputs.dav1d }}')) { '1' } else { '${{ inputs.dav1d }}' }
+            libavif = if ([string]::IsNullOrWhiteSpace('${{ inputs.libavif }}')) { '1' } else { '${{ inputs.libavif }}' }
+            libheif = if ([string]::IsNullOrWhiteSpace('${{ inputs.libheif }}')) { '1' } else { '${{ inputs.libheif }}' }
+            vvc = if ([string]::IsNullOrWhiteSpace('${{ inputs.vvc }}')) { '1' } else { '${{ inputs.vvc }}' }
+            uvg266 = if ([string]::IsNullOrWhiteSpace('${{ inputs.uvg266 }}')) { '1' } else { '${{ inputs.uvg266 }}' }
+            jq = if ([string]::IsNullOrWhiteSpace('${{ inputs.jq }}')) { '1' } else { '${{ inputs.jq }}' }
+            dssim = if ([string]::IsNullOrWhiteSpace('${{ inputs.dssim }}')) { '1' } else { '${{ inputs.dssim }}' }
+            gifski = if ([string]::IsNullOrWhiteSpace('${{ inputs.gifski }}')) { '1' } else { '${{ inputs.gifski }}' }
+            avs2 = if ([string]::IsNullOrWhiteSpace('${{ inputs.avs2 }}')) { '1' } else { '${{ inputs.avs2 }}' }
+            dovitool = if ([string]::IsNullOrWhiteSpace('${{ inputs.dovitool }}')) { '1' } else { '${{ inputs.dovitool }}' }
+            hdr10plustool = if ([string]::IsNullOrWhiteSpace('${{ inputs.hdr10plustool }}')) { '1' } else { '${{ inputs.hdr10plustool }}' }
+            timeStamp = if ([string]::IsNullOrWhiteSpace('${{ inputs.timeStamp }}')) { '1' } else { '${{ inputs.timeStamp }}' }
+            noMintty = if ([string]::IsNullOrWhiteSpace('${{ inputs.noMintty }}')) { '1' } else { '${{ inputs.noMintty }}' }
+            ccache = if ([string]::IsNullOrWhiteSpace('${{ inputs.ccache }}')) { '1' } else { '${{ inputs.ccache }}' }
+            svthevc = if ([string]::IsNullOrWhiteSpace('${{ inputs.svthevc }}')) { '1' } else { '${{ inputs.svthevc }}' }
+            svtav1 = if ([string]::IsNullOrWhiteSpace('${{ inputs.svtav1 }}')) { '1' } else { '${{ inputs.svtav1 }}' }
+            svtvp9 = if ([string]::IsNullOrWhiteSpace('${{ inputs.svtvp9 }}')) { '1' } else { '${{ inputs.svtvp9 }}' }
+            xvc = if ([string]::IsNullOrWhiteSpace('${{ inputs.xvc }}')) { '1' } else { '${{ inputs.xvc }}' }
+            jo = if ([string]::IsNullOrWhiteSpace('${{ inputs.jo }}')) { '1' } else { '${{ inputs.jo }}' }
+            vlc = if ([string]::IsNullOrWhiteSpace('${{ inputs.vlc }}')) { '1' } else { '${{ inputs.vlc }}' }
+            CC = if ([string]::IsNullOrWhiteSpace('${{ inputs.CC }}')) { '' } else { '${{ inputs.CC }}' }
+            jpegxl = if ([string]::IsNullOrWhiteSpace('${{ inputs.jpegxl }}')) { '1' } else { '${{ inputs.jpegxl }}' }
+            vvenc = if ([string]::IsNullOrWhiteSpace('${{ inputs.vvenc }}')) { '1' } else { '${{ inputs.vvenc }}' }
+            vvdec = if ([string]::IsNullOrWhiteSpace('${{ inputs.vvdec }}')) { '1' } else { '${{ inputs.vvdec }}' }
+            zlib = if ([string]::IsNullOrWhiteSpace('${{ inputs.zlib }}')) { '1' } else { '${{ inputs.zlib }}' }
+            ffmpegPath = if ([string]::IsNullOrWhiteSpace('${{ inputs.ffmpegPath }}')) { '' } else { '${{ inputs.ffmpegPath }}' }
+            pkgUpdateTime = if ([string]::IsNullOrWhiteSpace('${{ inputs.pkgUpdateTime }}')) { '' } else { '${{ inputs.pkgUpdateTime }}' }
+          }
+
+          $lines = @('[compiler list]')
+          foreach ($option in $iniOptions) {
+            $value = if ($optionOverrides.ContainsKey($option)) { $optionOverrides[$option] } else { '1' }
+            $lines += "$option=$value"
+          }
+
+          Set-Content -Path "$env:GITHUB_WORKSPACE\build\media-autobuild_suite.ini" -Value $lines -Encoding UTF8
+
+      - name: Run media-autobuild_suite.bat
+        shell: cmd
+        run: |
+          call media-autobuild_suite.bat
