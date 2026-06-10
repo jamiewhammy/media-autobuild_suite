@@ -14,6 +14,8 @@ mintty.lnk
 update_suite.sh
 !build/bash.ps1
 !build/media-autobuild_suite.ini
+!build/ffmpeg_options.txt
+!build/mpv_options.txt
 !build/*.sh
 !build/patches/
 !build/extras/

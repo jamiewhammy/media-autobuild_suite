@@ -6,12 +6,14 @@ name: Windows MSYS2
 on:
   workflow_dispatch:
   push:
+    branches:
+      - master
   pull_request:
 
 jobs:
   media-suite:
     runs-on: windows-latest
-    timeout-minutes: 180
+    timeout-minutes: 360
 
     steps:
       - name: Check out repository
