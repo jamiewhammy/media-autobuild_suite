@@ -1,22 +1,24 @@
 # Lines starting with this character are ignored
 
 # Built-in options, use =disabled to disable them
-#-Dcplayer=true
+-Dcplayer=true
+# manpage-build is documentation, not a library (needs python-docutils/rst2man)
 #-Dmanpage-build=enabled
-#-Dlua=enabled
-#-Djavascript=enabled
-#-Dlibbluray=enabled
-#-Duchardet=enabled
-#-Drubberband=enabled
-#-Dlcms2=enabled
-#-Dlibarchive=enabled
-#-Dlibavdevice=enabled
-#-Dshaderc=enabled
-#-Dspirv-cross=enabled
-#-Dd3d11=enabled
-#-Djpeg=enabled
+-Djavascript=enabled
+-Dlibbluray=enabled
+-Duchardet=enabled
+-Drubberband=enabled
+-Dlcms2=enabled
+-Dlibarchive=enabled
+-Dlibavdevice=enabled
+-Dshaderc=enabled
+-Dspirv-cross=enabled
+-Dd3d11=enabled
+-Djpeg=enabled
+# vapoursynth needs a manual VapourSynth/Python install the suite doesn't
+# provide; the suite auto-disables it (mpv_disable vapoursynth) when absent.
 #-Dvapoursynth=enabled
-#-Dvulkan=enabled
+-Dvulkan=enabled
 
 # Common options or overriden defaults
 -Dlua=luajit
@@ -24,7 +26,9 @@
 # Full
 -Ddvdnav=enabled
 -Dcdda=enabled
+# egl-angle needs ANGLE, which the suite doesn't build
 #-Degl-angle=enabled
+# html-build / pdf-build are documentation, not libraries
 #-Dhtml-build=enabled
 #-Dpdf-build=enabled
 -Dopenal=enabled
