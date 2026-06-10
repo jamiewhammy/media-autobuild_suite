@@ -26,99 +26,148 @@ on:
       vpx2:
         description: 'Enable VPX2 support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       x2643:
-        description: 'Enable x2643 support'
+        description: 'Choose x264 build type'
         required: false
-        default: '1'
+        default: '1 - Lib/binary with 8 and 10-bit'
         type: choice
-        options: ['0', '1']
+        options:
+          - '1 - Lib/binary with 8 and 10-bit'
+          - '2 - No'
+          - '3 - Lib/binary with only 10-bit'
+          - '4 - Lib/binary with 8 and 10-bit, and libavformat and ffms2'
+          - '5 - Shared lib/binary with 8 and 10-bit'
+          - '6 - Same as 4 with video codecs only'
+          - '7 - Lib/binary with only 8-bit'
       x2652:
-        description: 'Enable x2652 support'
+        description: 'Choose x265 build type'
         required: false
-        default: '1'
+        default: '1 - Lib/binary with Main, Main10 and Main12'
         type: choice
-        options: ['0', '1']
+        options:
+          - '1 - Lib/binary with Main, Main10 and Main12'
+          - '2 - No'
+          - '3 - Lib/binary with Main10 only'
+          - '4 - Lib/binary with Main only'
+          - '5 - Lib/binary with Main, shared libs with Main10 and Main12'
+          - '6 - Same as 1 with XP support and non-XP compatible x265-numa.exe'
+          - '7 - Lib/binary with Main12 only'
       other265:
         description: 'Enable other265 support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       flac:
         description: 'Enable FLAC support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       fdkaac:
         description: 'Enable FDK AAC support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       mediainfo:
         description: 'Enable MediaInfo support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       soxB:
         description: 'Enable SoX support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       ffmpegB2:
-        description: 'Enable FFmpeg B2 support'
+        description: 'Choose FFmpeg build type'
         required: false
-        default: '1'
+        default: '1 - Static'
         type: choice
-        options: ['0', '1']
+        options:
+          - '1 - Static'
+          - '2 - No'
+          - '3 - Shared'
+          - '4 - Both'
+          - '5 - Shared libs'
+          - '6 - Both static'
       ffmpegUpdate:
-        description: 'Update FFmpeg sources'
+        description: 'Choose FFmpeg update behavior'
         required: false
-        default: '1'
+        default: '1 - Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - '1 - Yes'
+          - '2 - No'
+          - '3 - Only build FFmpeg/mpv and missing dependencies'
       ffmpegChoice:
-        description: 'FFmpeg build preset'
+        description: 'Choose ffmpeg/mpv optional libraries preset'
         required: false
-        default: '2'
+        default: '1 - Yes'
         type: choice
-        options: ['1', '2', '3', '4']
+        options:
+          - '1 - Yes'
+          - '2 - No (Light build)'
+          - '3 - No (Mimic Zeranoe)'
+          - '4 - No (All available external libs)'
       ffmpegKeepLegacyOpts:
         description: 'Keep legacy FFmpeg options'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       mp4box:
         description: 'Enable MP4Box support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       rtmpdump:
         description: 'Enable RTMPDump support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       mplayer2:
         description: 'Enable MPlayer support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       mpv:
         description: 'Enable MPV support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       cores:
         description: 'Number of build cores'
         required: false
@@ -127,229 +176,298 @@ on:
       deleteSource:
         description: 'Delete source directories after build'
         required: false
-        default: '2'
+        default: 'No'
         type: choice
         options:
-          - '1 - Yes'
-          - '2 - No'
+          - 'Yes'
+          - 'No'
       strip:
         description: 'Strip binaries'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       pack:
         description: 'Create packed artifacts'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
         options:
-          - '1 - Yes'
-          - '2 - No'
+          - 'Yes'
+          - 'No'
       logging:
         description: 'Enable logging'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
         options:
-          - '1 - Yes'
-          - '2 - No'
+          - 'Yes'
+          - 'No'
       bmx:
         description: 'Enable BMX support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       standalone:
         description: 'Build standalone helper binaries'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
         options:
-          - '1 - Yes'
-          - '2 - No'
+          - 'Yes'
+          - 'No'
       updateSuite:
         description: 'Check for suite updates'
         required: false
-        default: '1'
+        default: 'Yes'
+        type: choice
+        options:
+          - 'Yes'
+          - 'No'
+      av1an:
+        description: 'Enable AV1AN support'
+        required: false
+        default: 'Yes'
+        type: choice
+        options:
+          - 'Yes'
+          - 'No'
+      aom:
+        description: 'Enable AOM support'
+        required: false
+        default: 'Yes'
+        type: choice
+        options:
+          - 'Yes'
+          - 'No'
+      faac:
+        description: 'Enable FAAC support'
+        required: false
+        default: 'Yes'
+        type: choice
+        options:
+          - 'Yes'
+          - 'No'
+      exhale:
+        description: 'Enable Exhale support'
+        required: false
+        default: 'Yes'
+        type: choice
+        options:
+          - 'Yes'
+          - 'No'
+      ffmbc:
+        description: 'Enable FFmbc support'
+        required: false
+        default: 'Yes'
+        type: choice
+        options:
+          - 'Yes'
+          - 'No'
+      curl:
+        description: 'Choose curl backend'
+        required: false
+        default: '1 - Yes'
         type: choice
         options:
           - '1 - Yes'
           - '2 - No'
-      av1an:
-        description: 'Enable AV1AN support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      aom:
-        description: 'Enable AOM support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      faac:
-        description: 'Enable FAAC support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      exhale:
-        description: 'Enable Exhale support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      ffmbc:
-        description: 'Enable FFmbc support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
-      curl:
-        description: 'Enable curl support'
-        required: false
-        default: '1'
-        type: choice
-        options: ['0', '1']
+          - '3 - schannel'
+          - '4 - gnutls'
+          - '5 - openssl'
+          - '6 - libressl'
+          - '7 - mbedtls'
       cyanrip2:
         description: 'Enable cyanrip2 support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       rav1e:
         description: 'Enable Rav1e support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       ripgrep:
         description: 'Enable ripgrep support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       dav1d:
         description: 'Enable Dav1d support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       libavif:
         description: 'Enable libavif support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       libheif:
-        description: 'Enable libheif support'
+        description: 'Choose libheif build type'
         required: false
-        default: '1'
+        default: '1 - Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - '1 - Yes'
+          - '2 - No'
+          - '3 - Shared (single libheif.dll)'
       vvc:
         description: 'Enable VVC support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       uvg266:
         description: 'Enable uvg266 support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       jq:
         description: 'Enable jq support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       dssim:
         description: 'Enable dssim support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       gifski:
-        description: 'Enable gifski support'
+        description: 'Choose gifski build mode'
         required: false
-        default: '1'
+        default: '1 - Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - '1 - Yes'
+          - '2 - With built-in video support'
+          - '3 - No'
       avs2:
         description: 'Enable AVS2 support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       dovitool:
         description: 'Enable dovitool support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       hdr10plustool:
         description: 'Enable HDR10+ tool support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       timeStamp:
         description: 'Enable timestamping'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       noMintty:
         description: 'Disable Mintty'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       ccache:
         description: 'Enable ccache'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       svthevc:
         description: 'Enable SVT-HEVC support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       svtav1:
         description: 'Enable SVT-AV1 support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       svtvp9:
         description: 'Enable SVT-VP9 support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       xvc:
         description: 'Enable xvc support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       jo:
         description: 'Enable jo support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       vlc:
         description: 'Enable VLC support'
         required: false
-        default: '1'
+        default: 'Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - 'Yes'
+          - 'No'
       CC:
         description: 'Compiler override'
         required: false
@@ -374,11 +492,17 @@ on:
         type: choice
         options: ['0', '1']
       zlib:
-        description: 'Enable zlib support'
+        description: 'Choose zlib variant'
         required: false
-        default: '1'
+        default: '1 - Yes'
         type: choice
-        options: ['0', '1']
+        options:
+          - '1 - Yes'
+          - '2 - chromium'
+          - '3 - cloudflare'
+          - '4 - ng'
+          - '5 - rs'
+          - '6 - No'
       ffmpegPath:
         description: 'Optional FFmpeg path override'
         required: false
@@ -433,11 +557,21 @@ jobs:
               return $Default
             }
 
-            if ($Raw -match '^\s*(\d+)') {
+            $normalized = $Raw.Trim()
+
+            if ($normalized -match '^(?i)yes$') {
+              return '1'
+            }
+
+            if ($normalized -match '^(?i)no$') {
+              return '2'
+            }
+
+            if ($normalized -match '^\s*(\d+)') {
               return $Matches[1]
             }
 
-            return $Raw
+            return $normalized
           }
 
           $iniOptions = @(
